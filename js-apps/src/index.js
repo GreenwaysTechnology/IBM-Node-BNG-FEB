@@ -1,59 +1,48 @@
 
-let a = 10;
-let b = 10;
-let c = a == b;
-console.log(c)
-
-//type + content
-let x = "10";
-let y = 10;
-let z = x === y;
-console.log(z)
-
-let isWorking = true;
-
-if (isWorking) {
-    console.log('working')
-} else {
-    console.log('notworking')
+//function declaration
+function sayHello() {
+    console.log('Hello');
 }
+//function invocation
+sayHello()
 
-if (x === y) {
-    console.log('X and y are equal')
-} else {
-    console.log('X and y are not  equal')
-
+function add() {
+    let c = 10 + 10
+    console.log(c)
 }
-/////////////////////////////////////////////////////////////////////////
+add();
+///////////////////////////////////////////////////////////////////////////////
 
-let price = 0;
+//params and args:
 
-if(price){
-    console.log('Price is there')
-}else{
-    console.log('No price')
+//a,b args
+//default args
+function multiply(a = 1, b = 1) {
+    let c = a * b;
+    console.log(c)
 }
+//10,10 is params
+multiply(10, 10);
+multiply(undefined, 90);
 
-let name;
-let result = name ? "Hello!" : "No Name";
-console.log(name);
+//more params ,not known : ... rest operator
+function logger(...arg) {
+    console.log(arg)
+}
+logger('hello');
+logger('hello', 'hey');
+logger('hello', 'hai', 'welcome');
 
-//||
-let enabled =true;
-let raised = true;
+function getStockValue() {
+    let value = 10;
+    //return 10;
+    return value;
+}
+console.log(getStockValue());
 
-let status = enabled || raised;
-console.log(status);
-
-let start = 1;
-// if first operand is true, the result is first operand else second
-let position =  start || 10;
-console.log(position);
-
-//! ,!!
-
-let myname ='hello'
-let nameResult =!myname;
-console.log(nameResult);
-
-console.log(typeof myname)
+function isValid() {
+    return;//undefind
+}
+let res = isValid() ? 'Valid' : 'NotValid'
+console.log(res);
+//login validation : admin and admin.
