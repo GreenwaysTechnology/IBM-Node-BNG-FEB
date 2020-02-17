@@ -1,0 +1,294 @@
+What is Node.js?
+
+ Node is google V8 javascript runtime which is written in C++.
+ Node is nonblocking,event driven platform.
+
+Javascript :
+
+language fundamentals
+functional style programming
+ Sync- Blocking
+ Async - NonBlocking
+
+
+
+object based
+Dom-Document progrogramming
+networking-ajax
+.......................................................................................
+
+Lab setup;
+
+1.node runtime
+2.vs code
+
+..........................................................................................
+
+How to run js code on node?
+
+1.REPL mode
+
+2.command line mode
+
+..........................................................................................
+
+es5 and es6 ;
+
+types,variables,values(literals).
+
+js is type free language,weakly typed,dynamically typed.
+
+no compile time type checking,but runtime.
+
+runtime type checking based on literals.
+
+literals:
+string,number,boolean,undefined,NaN,infinity,null,function,object.
+
+variable declaration:
+
+var | let | const | this variable name = literal
+
+string:
+ collection of 16 bit unicode char.
+ string is object
+
+string literal can be declared 
+
+ ""
+ ''
+ `` -es 6
+
+note:
+ ; is optional
+
+string concatation:
+
+ +
+ ,
+
+`` - back tick , es 6 feature
+`${varName}` -  string interploation
+
+
+//numbers
+ 64 bit double
+
+//boolean
+ 1 bit - true/false
+
+//undefined
+ variable is declared but not initalized with valid literal
+..................
+
+NaN, infinity: both are numbers
+
+Nan: not a number: it is number which indicates error code.
+NaN is danagerous,
+
+Nan Use cases:
+//number * undefined
+var totalPrice =  price  * qty;
+console.log(totalPrice)
+
+Type conversion: string to number
+1.implicit :auto conversion
+ 
+2.explicit
+
+//strings
+var firstName = "Subramanian";
+var lastName = 'Murugan';
+//
+console.log("First Name" + firstName);
+console.log('lastName' + lastName);
+console.log("First Name", firstName);
+console.log('lastName', lastName);
+
+//es 6 feature
+console.log(`First Name ${firstName} `)
+console.log(`last Name ${lastName} `)
+
+//multi line string literal
+
+var title ='IBM digital'
+var doc = "<html>" +
+    "<head>" +
+    "<title>" +
+     title + 
+    "</title>" +
+    "</head>" +
+    "<body>" +
+    "<h1>Test</h1>" +
+    "</body></html>";
+console.log(doc);
+
+var newDoc = `
+<html>
+<title>
+   ${title}
+</title>
+</head>
+<body>
+<h1>Test</h1>
+</body></html>
+`
+console.log(newDoc);
+
+var price =100;
+console.log(`price is ${price}`);
+
+//boolean
+var isWorking = true;
+console.log(`Working ${isWorking}`);
+
+var qty;
+console.log(`The Qty ${qty}`);
+
+//Nan Use case : 1
+
+//number * undefined
+var totalPrice =  price  * qty;
+console.log(totalPrice)
+
+//type convesion
+var i ="10";
+//string * number - string converted to number and then computation
+var j =  i * 10;
+console.log(j)
+
+var x ="90";
+var y = parseInt(x) * 100;
+console.log(y);
+
+//use case NaN; type conversion error
+
+var todayPrice = "$10"
+var toalTodayPrice = todayPrice  *100;
+console.log(toalTodayPrice)
+
+//Infinity ; div / 0
+var avgMark = 100 /0;
+console.log(avgMark)
+////////////////////////////////////////////////////////////////////////////////////////
+
+operators:
+
+eq :  == , === ,!= ,!==
+
+
+let a =10;
+let b =10;
+let c = a == b;
+console.log(c)
+
+//type + content
+let x ="10";
+let y =10;
+let z = x ===y;
+console.log(z)
+
+Advanced booleans: if,if..else,switch...
+
+booleans values - true/false
+comparsion,relation,logical ; true /false
+
+In js ever thing is true execpt the following values
+
+1.boolean false
+2.0
+3."",''
+4.undefined
+5.NaN
+6.null
+
+ ?: =>to replace if ;recommended
+
+
+|| &&ss
+
+!,!!
+
+typeof : identify type of value ; number,string,boolean,undefined,function,object.
+new,instance of, . ,[] 
+
+
+
+let a = 10;
+let b = 10;
+let c = a == b;
+console.log(c)
+
+//type + content
+let x = "10";
+let y = 10;
+let z = x === y;
+console.log(z)
+
+let isWorking = true;
+
+if (isWorking) {
+    console.log('working')
+} else {
+    console.log('notworking')
+}
+
+if (x === y) {
+    console.log('X and y are equal')
+} else {
+    console.log('X and y are not  equal')
+
+}
+/////////////////////////////////////////////////////////////////////////
+
+let price = 0;
+
+if(price){
+    console.log('Price is there')
+}else{
+    console.log('No price')
+}
+
+let name;
+let result = name ? "Hello!" : "No Name";
+console.log(name);
+
+//||
+let enabled =true;
+let raised = true;
+
+let status = enabled || raised;
+console.log(status);
+
+let start = 1;
+// if first operand is true, the result is first operand else second
+let position =  start || 10;
+console.log(position);
+
+//! ,!!
+
+let myname ='hello'
+let nameResult =!myname;
+console.log(nameResult);
+
+console.log(typeof myname)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
