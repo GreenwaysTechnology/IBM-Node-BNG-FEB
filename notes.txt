@@ -273,6 +273,2289 @@ console.log(nameResult);
 
 console.log(typeof myname)
 
+...........................................................................................
+
+functions :building blocks of js apps.
+
+
+memory layout of js engine:
+
+points:
+
+1.js engine is process.
+  process program in excution,program in ram.
+
+ types of program
+   -passive : program in disk 
+   -active - program in ram
+
+according to os, process has structure (memory layout)/data structure
+
+heap   : it is room, where dynamic memory allocated for a program which you load on runtime
+
+stack : it is roomm for memory allocation.
+
+stack  ; LIFOUT ds.
+
+
+
+//function declaration
+function sayHello() {
+    console.log('Hello');
+}
+//function invocation
+sayHello()
+
+function add() {
+    let c = 10 + 10
+    console.log(c)
+}
+add();
+///////////////////////////////////////////////////////////////////////////////
+
+//params and args:
+
+//a,b args
+//default args
+function multiply(a = 1, b = 1) {
+    let c = a * b;
+    console.log(c)
+}
+//10,10 is params
+multiply(10, 10);
+multiply(undefined, 90);
+
+//more params ,not known : ... rest operator
+function logger(...arg) {
+    console.log(arg)
+}
+logger('hello');
+logger('hello', 'hey');
+logger('hello', 'hai', 'welcome');
+
+function getStockValue() {
+    let value = 10;
+    //return 10;
+    return value;
+}
+console.log(getStockValue());
+
+function isValid() {
+    return;//undefind
+}
+let res = isValid() ? 'Valid' : 'NotValid'
+console.log(res);
+//login validation : admin and admin.
+.............................................................................................
+function declartion:
+
+1.function in normal declaration
+
+  function sayHello(){}
+  sayHello();
+
+2.function as literal(value)
+ 
+  let a =10; here 10 is literal , but it is number
+
+const hai = function () {
+
+};
+
+rule;
+
+ if a function is assigned to a variable, that variable can be used to invoke that function
+
+//function declaration 
+const hai = function () {
+  console.log('Hai')
+};
+
+hai();
+
+//params and args
+
+const add  =  function(a=1,b=1){
+    return a + b;
+};
+
+console.log(add(10,10))
+
+ES 6 Function declaration(Arrow function):
+..........................................
+
+
+
+//Arrow functions
+//old style
+// const hai = function(){
+//     console.log('hai')
+// };
+
+const hai = () => {
+    console.log('Hai')
+};
+hai();
+
+//if function has only one line of body: remove {}
+const hello = () => console.log('Hello');
+hello()
+
+//multiple parameters with default value
+const add = (a = 1, b = 1) => {
+    const c = a + b;
+    console.log(`Add Result ${c}`)
+}
+add()
+//single parameter, without default : remove ()
+const greeter = message => console.log(message);
+greeter('Welcome')
+//return value
+
+const getStockValue = () => {
+    return 100;
+}
+console.log(getStockValue())
+//if funciton returns only value, remove {} and return statement
+const getCounter = () => 1;
+console.log(getCounter());
+
+//if function takes single parameter,without default value, return the same
+
+const pure = info => info;
+
+console.log(pure('Pure function'));
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+what can be passed to the function as parameter?
+
+ Any literal can be passed as parameter to the function.
+
+function as parameter:
+.....................
+
+Message :
+  body: data
+  headers:
+
+
+In node js: 
+Message = is function=>callback function
+
+function can have "data" which was sent by producer.
+
+............................................................................................
+
+Async Programming requirments:
+
+1.async high level api in js eq to low level api in node/browser
+
+api supported by js:
+
+browser:
+1.timers
+    settimeout,setinterval
+2.xmlhttpapi -ajax-socket
+3.websocket
+4.dom events-click,keyboard
+5.animation apis
+ ....
+
+node 
+1.timers
+    settimeout,setinterval
+2.IO API
+   -FS
+   -NETWORKING
+
+
+2.message : function,callback function/handler functions
+   if any function is passed to another function as param.
+
+
+
+
+
+//first async implemenation ; timer , set timeout
+
+console.log('start'); //stack---frame--running
+setTimeout(function () {
+    console.log(' i am async ')
+}, 1000);//stack---->transfer control to libuv|return to node-----os kernal -- thread is assigned
+//start ticking clock---1000ms awake----signal----libu--assign handler inside 
+//queue---loop--check whether stack is empty--if yes--handler --pushed --frame--prints results
+
+console.log('going on');////stack---frame--running
+
+///////////////////////////////////////////////////////////////////////////////
+
+const sayGreet = cb => {
+    setTimeout(() => cb(), 1000);
+}
+
+console.log('Hello')
+sayGreet(() => console.log('I am delayed function'))
+console.log('done!');
+
+//////////////////////////////////////////////////////////////////////////////
+//make async
+
+const connect = cb => setTimeout(cb, 0);
+connect(() => console.log('Server is connected!'));
+
+
+const stream = (counter = 0, cb) => {
+    let timerId = setInterval(() => {
+        counter += 1;
+        cb(counter)
+    }, 1000);
+    return timerId;
+}
+console.log('start')
+let timerId = stream(10, counter => console.log(counter))
+console.log('going')
+setTimeout(() => {
+    clearInterval(timerId)
+}, 10000);
+console.log('over')
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Async implementations patterns:
+
+1.callback patterns : which core
+2.Promise
+3.async await
+4.Generator
+
+
+1.callback patterns 
+ refer above
+
+2.Promise 
+ Why Promise? What is promise
+
+callback hell:
+
+getUser---if userfound
+                  --->login
+			 -->
+			    admin panel
+					-welcome to admin
+			    error panel
+					-show error message
+
+
+
+
+const getUser = (resolve, reject) => {
+    let fakeuser = 'adminxx';
+    //let fakeuser
+    if (fakeuser) {
+        setTimeout(() => {
+            resolve(fakeuser)
+        }, 100);
+    } else {
+        setTimeout(() => {
+            reject('No user found')
+        }, 100);
+    }
+};
+
+const login = (user, resolve, reject) => {
+
+    if (user === 'admin') {
+        setTimeout(() => {
+            resolve(user)
+        }, 200);
+    } else {
+        setTimeout(() => {
+            reject('login failed')
+        }, 100);
+    }
+
+}
+
+const adminPanel = user => console.log(`Welcome to ${user}`)
+const errPanel = err => console.log(err)
+
+getUser(user => {
+    login(user, user => adminPanel(user), err => errPanel(err))
+}, err => console.log(err)); 
+
+
+
+
+
+Questions:
+
+1.Whether this code is able to understand quickly
+2.Whether this code is able to debug
+3.Whehter this code is scalable?
+4.whether this code is maintaiable?
+
+
+  "No" : This is what we call as "Callback hell".
+
+fs.readdir(source, function (err, files) {
+  if (err) {
+    console.log('Error finding files: ' + err)
+  } else {
+    files.forEach(function (filename, fileIndex) {
+      console.log(filename)
+      gm(source + filename).size(function (err, values) {
+        if (err) {
+          console.log('Error identifying file size: ' + err)
+        } else {
+          console.log(filename + ' : ' + values)
+          aspect = (values.width / values.height)
+          widths.forEach(function (width, widthIndex) {
+            height = Math.round(width / aspect)
+            console.log('resizing ' + filename + 'to ' + height + 'x' + height)
+            this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+              if (err) console.log('Error writing file: ' + err)
+            })
+          }.bind(this))
+        }
+      })
+    })
+  }
+})
+
+callback is other wise called as doom of pyrbid.
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+How to write better callback programming? or How to avoid callback hell?
+
+
+In 2005, JQUERY team started with working complex callback patterns, they found callback
+hell problem.
+
+They proposed a  Design pattern to write better callback programming(Async) programming.
+
+  "Promise".
+
+
+Promise is design pattern which hides complexity of callback patterns
+
+
+SInce Promise is design pattern, many people have implemented Promise design pattern.
+
+1.JQuery -first promise implementation
+2.many libs and frameworks
+
+2012 E6 Commit introduced Promise as Object in javascript
+
+features of Promise Object:
+
+1.Promise by deafult is Async. Which implements timer api with 0 ms .
+
+Promise can be used with any async implementations.
+
+
+Object based Programming:
+
+In js everthing is object ,including function.
+
+object:
+
+memory of data and operations(methods)
+objects are allocated in heap.
+objects are represented as "map".
+
+how to allocate memory inside heap?
+
+1.constructor pattern
+ using functions-classes like c++
+ es 6 class syntax
+
+function is acting as
+
+1.stack frame - invocation
+   sayHello()-----stack frame
+2.as object constructor
+   new sayHello()----object
+3.as message-callback
+   message--eventloop
+
+new operator will push the code into heap
+
+2.literal pattern
+
+
+Object = state + behaviour
+
+state-instance variable
+
+"this" is used to declare instance variables and methods
+let,const,var is used to declare stack variables
+
+
+
+
+function Employee() {
+    //instance variables
+    this.id = 1;
+    this.name = 'Subramaian';
+    //instance mehtods
+    this.calculateSalary = function () {
+        return 100;
+    }
+
+}
+let emp = new Employee();
+//access object properties : .,[]
+console.log(`Id ${emp.id} name ${emp.name} salary ${emp.calculateSalary()}`)
+
+//class syntax
+
+class Customer {
+    constructor() {
+        this.id = 1;
+        this.name = 'Subramaian';
+    }
+    //methods
+    calcuateInvoice() {
+        return 1000
+    }
+    calcGST = () => 1000
+}
+let cust = new Customer();
+console.log(`Id ${cust.id} name ${cust.name} GST ${cust.calcGST()}`); 
+////////////////////////////////////////////////////////////////////////////////////////
+
+state intialization:
+1.hardcoded
+ this.id = 1;
+ this.name = 'Subramaian';
+ 
+2.after object creation
+  emp.property =newvalue
+let empOne = new Employee();
+emp.id = 9999;
+emp.name = 'Ram'
+
+3.function params/constructor params
+
+
+
+function Employee(id = 1, name = 'Subramanian') {
+    //instance variables
+    this.id = id;
+    this.name = name;
+    //instance mehtods
+    this.calculateSalary = function () {
+        return 100;
+    }
+
+}
+// let emp = new Employee();
+// //access object properties : .,[]
+// console.log(`Id ${emp.id} name ${emp.name} salary ${emp.calculateSalary()}`)
+
+// let empOne = new Employee();
+// emp.id = 9999;
+// emp.name = 'Ram'
+// console.log(`Id ${empOne.id} name ${empOne.name} salary ${empOne.calculateSalary()}`)
+
+
+// let emptwo = new Employee(87777, 'Karthik');
+// console.log(`Id ${emptwo.id} name ${emptwo.name} salary ${emptwo.calculateSalary()}`)
+
+
+let emp = null;
+
+//console.log(emp.id);
+
+emp = new Employee();
+//access object properties : .,[]
+console.log(`Id ${emp.id} name ${emp.name} salary ${emp.calculateSalary()}`)
+
+emp = new Employee();
+emp.id = 9999;
+emp.name = 'Ram'
+console.log(`Id ${emp.id} name ${emp.name} salary ${emp.calculateSalary()}`)
+
+
+emp = new Employee(87777, 'Karthik');
+console.log(`Id ${emp.id} name ${emp.name} salary ${emp.calculateSalary()}`)
+
+
+//class syntax
+
+class Customer {
+    constructor(id = 1, name = 'Subramanian') {
+        this.id = id;
+        this.name = name;
+    }
+    //methods
+    calcuateInvoice() {
+        return 1000
+    }
+    calcGST = () => 1000
+}
+let cust = null;
+cust = new Customer();
+console.log(`Id ${cust.id} name ${cust.name} GST ${cust.calcGST()}`);
+
+cust = new Customer(8999, 'John');
+console.log(`Id ${cust.id} name ${cust.name} GST ${cust.calcGST()}`);
+
+/////////////////////////////////////////////////////////////////////////////////
+
+//literal pattern
+
+const product = {
+    id: 1,
+    name: 'Phone',
+    value: 90,
+    getStock: function () {
+        return 100
+    },
+    getQty: () => 10,
+    getPrice() {
+        return 111;
+    },
+    getTotalValue() {
+        return this.value * this.getQty() * this.getPrice();
+    }
+}
+product.name ='TV'
+console.log(`${product.id} ${product.getTotalValue()}`)
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Hierachy: object relationship: IS-A,HAS-A
+IS-A : Inheritance:
+
+Inheritance in js runtime,
+js uses object inheritance: object inherits other objects.
+by default js inheritance is "delegation" based.
+by default every js object created using constructors has its own delegation object-Prototype.
+
+ES 5 prototype inheritance :mdn
+
+
+
+
+class Account {
+    constructor(id) {
+        this.id = id;
+        console.log('account')
+    }
+    withdraw() {
+        return 10.90;
+    }
+}
+class SavingsAccount extends Account {
+    constructor(id) {
+        super(id);
+        console.log('savings account')
+    }
+    withdraw() {
+        return 100.90 * super.withdraw();
+    }
+}
+
+let acc = new SavingsAccount(1222);
+console.log(acc.id,acc.withdraw())
+
+
+
+
+class Department {
+    constructor(name = 'Microservice') {
+        this.name = name;
+    }
+
+}
+class Address {
+    constructor(city = 'BNG') {
+        this.city = city;
+    }
+
+}
+
+class Employee {
+    constructor(id = 1, name = 'default', address = new Address(), department = new Department()) {
+        this.id = id
+        this.name = name
+        this.address = address;
+        this.department = department
+    }
+}
+let emp = null;
+let address = new Address();
+emp = new Employee(1, 'Subramanian', address, new Department());
+console.log(emp);
+console.log(emp.name,emp.address.city,emp.department.name)
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Java script in built Objects:
+
+POJO: 
+1.Object
+2.Wrapper classes
+  var i =10;number ->Number(),Strings,Booleans
+3.DS -ARRAY
+  foreach,map,filter...
+4.XMLHTTPRequest : for networkingOnly for browser
+5.JSON - Parser
+6.Promise
+
+
+
+let price = 10.8978.toFixed(2);
+console.log(price);
+
+let name = "subramanian".toUpperCase();
+console.log(name);
+
+const list = new Array(1, 2, 3, 4);
+
+const names = ['A', 'b', 'c'];
+
+//loops
+for (let i = 0; i < names.length; i++) {
+    console.log(names[i]);
+}
+//iterators
+names.forEach((item, index) => console.log(item));
+
+//
+const customers = [
+    { id: 1, name: 'A1' },
+    { id: 1, name: 'A2' },
+    { id: 1, name: 'A3' }
+];
+customers.forEach((customer,index)=>console.log(`${customer.id} ${customer.name}`))
+
+//convert object to string
+let customersJson=JSON.stringify(customers)
+console.log(customersJson)
+let custob =JSON.parse(customersJson)
+console.log(custob)
+  
+
+DOM /Node
+..............................................................................................
+
+Promise:
+
+Promise is object which is implementation "promise design pattern".
+
+Promise is by default async, the promise internally wraps timer with 0 ms.
+
+Promise Object can be in two ways
+
+
+1.using factory methods
+
+
+
+function getValue() {
+    //resolve is factory method, which says success
+    return Promise.resolve('done!') //returns Promise Object
+}
+
+console.log('start')
+let promise = getValue()
+//console.log(promise)
+promise.then(result => console.log(result))
+console.log('end')
+
+function getError() {
+    return Promise.reject('something went wrong')
+}
+
+let promiseErr = getError();
+promiseErr.catch(err => console.log(err))
+
+//
+const getUser = () => {
+    let fakeUser = 'admin';
+    if (fakeUser) {
+        return Promise.resolve(fakeUser)
+    }
+    return Promise.reject('something went wrong')
+}
+//builder/command chain/fulent pattern
+getUser()
+    .then(result => console.log(result))
+    .catch(err => console.log(err))
+
+2.using promise constructors
+
+if you want to convert any existing callback based async implementation you can use this pattern.
+
+let pr=new Promise(function(res,reject){
+
+
+})
+
+
+
+
+const getUser = () => {
+    return new Promise((resolve, reject) => {
+        let fakeUser = {
+            id: 1,
+            name: 'admin',
+            password: 'admin'
+        };
+        if (fakeUser) {
+            setTimeout(() => {
+                resolve(fakeUser)
+            }, 2000);
+        } else {
+            setTimeout(() => {
+                reject({
+                    err: 'User not Available'
+                })
+            }, 2000);
+        }
+    });
+};
+
+const login = user => {
+    return new Promise((resolve, reject) => {
+        if (user.name === 'admin') {
+            setTimeout(() => resolve({
+                loginsuccess: 'valid User'
+            }), 1000);
+        } else {
+            setTimeout(() => reject({
+                err: 'Invaild User',
+                code: 400,
+            }), 1000);
+        }
+    });
+}
+getUser()
+    .then(user => login(user))
+    .then(() => console.log('login Success'))
+    .catch(err => {
+        console.log(err)
+    })
+    .finally(() => console.log('async operation is done'))
+
+console.log('going on')
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Promise has limitions;
+......................
+
+1.Promise is still  complex when you start scalling complex async operations.
+
+2.Which is not readable ,which uses lot of then, catch blocks
+
+In order to write even simple complex async work flows ES 7 introduced
+a concept called "async await" keywords
+
+
+ It is simplest pattern of Promises.
+ It is promise driven only.
+
+ "Sync style of Async Code" 
+
+
+async key must be used with function declaration.
+await is used to pause async calls
+
+Promise has limitions;
+......................
+
+1.Promise is still  complex when you start scalling complex async operations.
+
+2.Which is not readable ,which uses lot of then, catch blocks
+
+In order to write even simple complex async work flows ES 7 introduced
+a concept called "async await" keywords
+
+
+ It is simplest pattern of Promises.
+ It is promise driven only.
+
+ "Sync style of Async Code" 
+
+
+async key must be used with function declaration.
+await is used to pause async calls
+
+
+
+async function fetch() {
+    try {
+        let name = await getName()
+        let likes = await getLike();
+        let fakeUser = await getUser();
+        console.log(`Name : ${name} ,FakeUser ${fakeUser.name} Likes ${likes}`)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+function getName() {
+    return Promise.resolve('Subramanian')
+}
+
+function getLike() {
+    return Promise.resolve(12)
+}
+
+function getUser() {
+    let fakeUser = {
+        name: 'admin'
+    };
+    if (fakeUser) {
+        return Promise.resolve(fakeUser)
+    }
+    return Promise.reject({ error: 'error' })
+}
+fetch();
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+node: io
+
+1.how to modularize js code?
+
+1.namespace 2.amd 3.cjs 4.es6 modules 5.system 6.umd
+
+Common js :
+
+it is design pattern invented in 2005--2006.
+
+2008, node implemented this design pattern by default.
+
+how to link files
+how to share code(variables,functions,classes,arrays,objects)
+in node js cjs loader is built in.
+
+cjs provides 3 keywords
+
+1.require() : to load /link files
+2.exports         
+3.module.exports = for code sharing.
+
+
+module scope:
+ what ever you declare, which is available inside that module(file) only until you share.
+
+how to share?
+
+you can pack your code into one single object(literal)
+
+by default a module returns "empty literal object"
+
+function module(){
+ let exports= {}
+
+ return exports 
+}
+
+exports.name = 's';
+
+
+Object augmentation:
+
+Object dynamically modified
+
+add new propery
+delete existing properyt
+update existing prop
+iterate 
+
+Object destrucing:
+.................
+
+alise name with node : we need webpack.
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Types of modules:
+
+1.custom modules
+  built by us
+2.in built modules
+3.third party modules
+
+
+IN Built modules:
+node provides lot of in built modules for io,utiltity.
+
+1.Node in built module
+
+1.os
+ Operating system releated features.
+
+
+const os = require('os')
+
+console.log(os.cpus());
+console.log(os.arch())
+
+
+points:
+
+ require('os') vs require('./greeter');
+                     
+without ./ means, node runtime uses env settings to lookup js files automatically
+./ means , lookup js files in the current dir.
+
+
+
+how node look up js files?
+
+node will look up files in this order
+
+  project-folder
+             ---node_modules	
+			---not present
+				 |
+				node installation folder(c drive)
+					|
+					node_modules
+						|
+						 present : load those files
+					else
+					  - throw errors.
+
+
+Error:
+internal/modules/cjs/loader.js:800
+    throw err;
+    ^
+
+Error: Cannot find module 'osggg'
+Require stack:
+- C:\session\mynode-apps\src\index.js
+[90m    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:797:15)[39m
+[90m    at Function.Module._load (internal/modules/cjs/loader.js:690:27)[39m
+[90m    at Module.require (internal/modules/cjs/loader.js:852:19)[39m
+[90m    at require (internal/modules/cjs/helpers.js:74:18)[39m
+    at Object.<anonymous> (C:\session\mynode-apps\src\index.js:2:12)
+[90m    at Module._compile (internal/modules/cjs/loader.js:959:30)[39m
+[90m    at Object.Module._extensions..js (internal/modules/cjs/loader.js:995:10)[39m
+[90m    at Module.load (internal/modules/cjs/loader.js:815:32)[39m
+[90m    at Function.Module._load (internal/modules/cjs/loader.js:727:14)[39m
+[90m    at Function.Module.runMain (internal/modules/cjs/loader.js:1047:10)[39m {
+  code: [32m'MODULE_NOT_FOUND'[39m,
+  requireStack: [ [32m'C:\\session\\mynode-apps\\src\\index.js'[39m ]
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Node is event driven, how to create event driven applications.
+
+node provides events modules.
+
+
+Publisher
+  emit
+  
+
+Subscriber
+ on
+
+
+const EventEmitter = require('events');
+
+//create Object for EventEmitter
+
+let event = new EventEmitter();
+
+//subscriber
+event.on('hello', function (data) {
+    console.log(`Event is fired : ${data}`)
+});
+
+//publisher
+event.emit('hello', 'Hello Node')
+
+//binding events with domain object
+
+class Inventory extends EventEmitter {
+    constructor() {
+        super();
+        //register subscriber
+        this.on('sales', ({ id, name }) =>
+            console.log(`Inventory has been updated ,${id} ${name}`)
+        );
+
+    }
+    //biz ap
+    sale(product) {
+        this.emit('sales', product)
+    }
+}
+
+let inventory = new Inventory();
+inventory.sale({ id: 1, name: 'phone' });
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+IO
+
+Node is used to build non block io.
+
+ Node initallly desinged for non blocking.
+
+Does node support blocking io?
+  Yes!
+Blocking io is very danagerous.
+  but still node supports, dont unnecessarly use blocking io code in app.
+
+How node supports blocking io?
+  Via "Thread Pools".
+  
+Types of IO
+
+1.fs io
+2.network io
+  -http : web apps
+  -tcp
+  -datagram
+
+
+
+Use case :non blocking fs io 
+
+const fs = require('fs');
+const fileName = './src/info.txt';
+const options = {
+    encoding: 'utf-8'
+}
+console.log('start')
+fs.readFile(fileName, options, function (err, data) {
+    if (err) throw err;
+    console.log(data);
+});
+console.log('end')
+
+
+Use case : Write file using nonblocking.
+
+const fs = require('fs');
+//
+//write file
+const writeFilepath = './src/info-copy.txt';
+
+const data = 'This is node IO file!';
+
+const config = {
+    encoding: 'UTF-8'
+};
+
+console.log('start')
+
+fs.writeFile(writeFilepath, data, config, function (err) {
+    if (err) throw err;
+    console.info(`The file ${writeFilepath} has been written!`)
+});
+console.log('end')
+
+Blocking IO : io operations never handled by os kernal , rather than , node(libuv)
+thread pool is used.
+
+Note:
+1.Dont use blocking io apis for big files
+2.Dont use blocking io apis in network applications.
+3.Node supports only disk file io in blocking mode, not network apis
+
+Node blocking io Operations:
+.........................
+
+fs.readFileSync()
+fs.writeFileSync()
+
+const fs = require('fs');
+
+const filePath = './src/info.txt';
+
+const config = {
+      encoding: 'UTF-8'
+}
+
+console.log('start');
+const data = fs.readFileSync(filePath, config);
+console.log(data);
+console.log('end')
+///////////////////////////////////////////////////////////////////////////////////
+
+Node Globals:
+
+
+Global Objects:
+...............
+1.process
+2.JS objects-math,date....
+3.exports
+4.module
+
+
+Global Variables:
+
+5.__dirname
+      ->Get current dir path
+6.__filename
+     ->Get current dir + path__filename
+     ->Get current dir + path
+
+
+
+Process:
+
+1.Process is global/root object in node. used to set/share global data across the application.
+
+
+Use Case:
+  current dir + fileName
+	dir/src + fileName
+
+const fileName = __dirname + 'info.txt'; //'./src/info.txt';
+
+
+How to deal with file paths?
+
+ node provides a module called "path"
+
+
+const fs = require('fs');
+const path = require('path')
+
+//const fileName = __dirname + '\info.txt'; //'./src/info.txt';
+
+const fileName = path.join(__dirname, 'info.txt')
+
+const config = {
+    encoding: 'UTF-8'
+};
+
+fs.readFile(fileName, config, function (err, data) {
+    //handle error
+    if (err) throw err;
+    console.log(data);
+});
+
+Streaming:
+ 
+Packet:
+   In networks the data is broken into smaller and smaller unit, which is called packet.
+  each packet is sent sequentially to the client.
+
+Node js uses the packet like technique to send data , that is process we call "Chunk".
+
+Chunk is called a unit of data.
+
+Streaming apis are powered with events :evented
+
+Events are emitted by os, our program is listener.
+
+Types of Streams:
+
+1.Readable Stream : input
+2.Writeable stream : output
+3.Duplex stream : read + output
+
+
+Built in readable Streams:
+
+HTTP responses, on the client
+HTTP requests, on the server
+fs read streams
+zlib streams
+crypto streams
+TCP sockets
+child process stdout and stderr
+process.stdin
+
+Writable Streams:
+
+HTTP requests, on the client
+HTTP responses, on the server
+fs write streams
+zlib streams
+crypto streams
+TCP sockets
+child process stdin
+process.stdout, process.stderr
+
+
+common events in all io
+
+data event:
+ which is emitted by node, for each chunk.
+
+close event:
+The 'close' event is emitted when the stream and any of its underlying resources (a file descriptor, for example) have been closed.
+
+end event:
+The 'end' event is emitted when there is no more data to be consumed from the stream.
+
+Event: 'error'
+ The 'error' event may be emitted by a Readable implementation at any time
+Typically, this may occur if the underlying stream is unable to generate data due to an underlying internal failure, or when a stream implementation attempts to push an invalid chunk of data.
+
+const fs = require('fs');
+const path = require('path');
+
+const fileName = path.join(__dirname, 'info.txt')
+
+const config = {
+    encoding: 'UTF-8'
+};
+
+const stream = fs.createReadStream(fileName, config)
+
+//Bind events
+let data = '';
+stream.on('data', function (chunk) {
+    console.log(`Received ${chunk.length} bytes of data.`);
+    data += chunk;
+});
+
+stream.on('error', function (err) {
+    console.log(err);
+});
+stream.on('end', function () {
+    console.log('end')
+    console.log('Data is ready');
+    console.log(data);
+});
+stream.on('close', function () {
+    console.log('close ')
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////
+Stream write Operation:
+const fs = require('fs');
+const path = require('path');
+
+const fileName = path.join(__dirname, 'grains.txt');
+
+const config = {
+    encoding: 'utf8',
+    flag: 'w'
+};
+const grains = ['wheat', 'rice', 'oats'];
+
+const outputStream = fs.createWriteStream(fileName, config);
+
+while (grains.length) {
+    let data = grains.pop() + " ";
+    outputStream.write(data);
+    console.log("Wrote: %s", data);
+}
+outputStream.close();
+
+outputStream.on('close', function () {
+    console.log('file write operation is completed')
+});
+outputStream.on('open', function () {
+    console.log('file is opened for write')
+});
+
+outputStream.on('ready', function () {
+    console.log('file write operation is ready!')
+});
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+Read from one stream and write another stream:
+
+ readfrom disk and write into http
+//read + write 
+const fs = require('fs');
+const path = require('path');
+
+const fileName = path.join(__dirname, 'info.txt');
+
+const config = {
+      encoding: 'UTF-8'
+}
+
+const outputFileName = path.join(__dirname, 'greeter.txt');
+
+
+const inputStream = fs.createReadStream(fileName, config);
+
+const outputStream = fs.createWriteStream(outputFileName, config);
+
+//Register data event.
+inputStream.on('data', function (chunk) {
+      console.log(`Received ${chunk.length} bytes of data.`);
+      console.log(chunk);
+      outputStream.write(chunk);
+});
+
+
+//end event
+inputStream.on('end', function () {
+      console.log('There will be no more data to read!');
+      outputStream.close();
+})
+
+//error event: for error handling
+inputStream.on('error', function (err) {
+      console.log(`Some thing went wrong! ${err}`)
+});
+
+outputStream.on('close', function () {
+      console.log(`File write operation is completed`);
+});
+
+Back Pressure:
+.............
+
+If you want to read data from one file and write into anthoer file.
+If you want to read data from network sockets and write into anthoer file /another socket.
+
+
+
+Problems when you do read and write together
+
+1. In general read operation is faster than write operation
+
+Back Pressure means inputstream is fast, outputstream slow, then data will be
+lost.
+
+Handling back pressure:
+.......................
+"Pause" Input stream if the Node Process memory is full(Buffer),
+resume if buffer/process memory is empty.
+
+
+Apis for handling back pressure:
+
+stream.pause() if stream is full
+else
+stream.resume() if stream is drain
+
+
+
+const fs = require('fs');
+const path = require('path');
+
+const inputfileName = path.join(__dirname, 'big.file');
+const outputfileName = path.join(__dirname, 'big_copy.file');
+
+const config = {
+    encoding: 'UTF-8'
+}
+
+//Back pressure handling
+const readerStream = fs.createReadStream(inputfileName, config);
+const writeStr = fs.createWriteStream(outputfileName, config);
+
+readerStream.on('data', function (chunk) {
+    console.log(`Received ${chunk.length} bytes of data.`);
+    let buffer_good = writeStr.write(chunk);
+    if (!buffer_good) readerStream.pause();
+});
+
+writeStr.on('drain', function () {
+    console.log('buffer drained!');
+    readerStream.resume();
+});
+
+readerStream.on('end', function () {
+    //console.log(data);
+});
+
+readerStream.on('error', function (err) {
+    console.log(err.stack);
+});
+
+
+
+
+Back Pressure can be simplified using one simple api : pipe
+
+pipe : enabled with backpressure
+
+syntax:
+ 
+readstream.pipe(writestream)
+
+const fs = require('fs');
+const path = require('path');
+
+const inputfileName = path.join(__dirname, 'big.file');
+const outputfileName = path.join(__dirname, 'big_copy.file');
+
+const config = {
+      encoding: 'UTF-8'
+}
+
+//Back pressure handling
+const readerStream = fs.createReadStream(inputfileName, config);
+const writeStr = fs.createWriteStream(outputfileName, config);
+
+//backPressure streams
+//pipe method is simplest method which wraps resume,pasuse,drain 
+readerStream.pipe(writeStr);
+
+***************************...................********************************************
+
+HTTP Programming:
+................
+
+what is http?
+ It is protocal for transfering web documents.
+
+what is protocal?
+ set of rules for transmitting data.
+
+How protocal is implemented?
+
+ It is program written c.
+
+http:// ,smtp://,soap://,amqp:// , c: -scheme
+
+program : variables + methods
+
+http is program, then it must have variables, methods
+
+http variables : headers,
+ content-type:'text/html'
+
+http methods   : actions/methods
+get,post,delete,put.....
+
+
+Every pl provides to call low level(c) program apis.
+
+High level apis:
+...............
+
+			java servlets   nodejs
+			    |             http.js
+			  doGet            |
+			    |
+		----------------------------------------------------------------
+			 c:get		  c:get
+			  
+		
+
+In general in any networking, we transfer some thing, we need channel(io).
+
+every protocal is io program.
+
+in node http is io api ,streaming io api.
+
+http in node is duplex : read +write.
+
+According server point of view:
+
+request : input
+response : output
+
+in node , all http implementations are objects which are created , ready for use.
+
+..........................................................................................
+
+In node , we can write server and also app.
+
+const http = require('http')
+
+//application
+const app = function (req, res) {
+    res.write('<h1>Hello</h1>')
+    res.end()
+}
+//create server
+const server = http.createServer(app)
+
+//start server
+server.listen(8081, function () {
+    console.log('Server is up!');
+});
+
+///////
+
+use case : server events
+const http = require('http')
+
+const port = process.env.port || 8081;
+
+//application
+const app = function (req, res) {
+    res.write('<h1>Hello</h1>')
+    res.end()
+
+    //Listening for Response events 
+    res.on('finish', function () {
+        console.log('Client Request has been finished')
+    });
+    res.on('close', function () {
+        console.log('Client Request has been closed')
+    });
+}
+//create server
+const server = http.createServer(app)
+
+//listen for server events
+server.on('request',function(req,res){
+    console.log(`request is received on ${new Date()}`)
+});
+
+//start server
+server.listen(port, function () {
+    console.log('Server is up!');
+});
+
+
+const { createServer } = require('http')
+
+const port = process.env.port || 8081;
+
+//application
+const app = function (req, res) {
+    res.write('<h1>Hello</h1>')
+    res.end()
+
+    //Listening for Response events 
+    res.on('finish', function () {
+        console.log('Client Request has been finished')
+    });
+    res.on('close', function () {
+        console.log('Client Request has been closed')
+    });
+}
+//create server
+const server = createServer(app)
+
+//listen for server events
+server.on('request', function (req, res) {
+    console.log(`request is received on ${new Date()}`)
+});
+
+//start server
+server.listen(port, function () {
+    console.log('Server is up!');
+});
+
+
+
+Use case 2 : how to send json data.
+
+
+What is json?
+
+ JSON is data interchange format.
+ JSON is data format for transmitting data across app/machines etc.
+
+
+const { createServer } = require('http')
+const TODOS = require('./mock-data/todos');
+
+const port = process.env.port || 8081;
+
+//application
+const app = function (req, res) {
+
+    let payload = JSON.stringify(TODOS);
+    res.setHeader('Content-Type', 'application/json');
+    res.write(payload)
+    res.end()
+
+    //Listening for Response events 
+    res.on('finish', function () {
+        console.log('Client Request has been finished')
+    });
+    res.on('close', function () {
+        console.log('Client Request has been closed')
+    });
+}
+//create server
+const server = createServer(app)
+
+//listen for server events
+server.on('request', function (req, res) {
+    console.log(`request is received on ${new Date()}`)
+});
+
+//start server
+server.listen(port, function () {
+    console.log('Server is up!');
+});
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Third Modules:
+node modules: types of modules
+
+1.custom module
+2.in built modules - fs,http,path,os.....
+3.third party module.
+
+IS it possible to build real time web apps by using just pure http module alone?
+
+ Yes! but it is very complex
+
+NPM : node package manager
+
+node package manager === mvn
+npm is tool is used to distribute node modules to others
+and you can get node modules from other others.
+
+npm tool is distributed along with node installation
+
+npm uses public repository server called npmjs.com npmjs.org
+
+tools and libs,frameworks all are distributed as node modules into repository.
+
+Javascript Project Structure:(server side/ client side)
+.........................................................
+
+The project must have two things
+
+1.package.json file :
+   meta file which describes the project information
+2.node_modules folder
+   which contains libs/frameworks/tools code.
+
+>npm init
+
+package.json
+{
+  "name": "mynode-apps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Subramanian Murugan",
+  "license": "ISC"
+}
+
+npm is used
+
+to install,uninstall,publish node modules from node repo / into node repo.
+
+if you install third party modules , into your project, node distributes npm tool ,using this you can install,uninstall,upgrade node modules.
+
+
+
+npm syntax:
+
+npm commandName.
+
+
+node_modules : folder which can hold all javascript modules downloaded from repo.
+
+
+nstalling module:
+
+>npm install  moduleName  --options
+>npm i moduleName --options
+
+options:
+ --save
+ --save-dev
+ -g
+
+Software env:
+
+
+1.Development
+
+2.Production
+
+
+if you are installing any node module, you can tell, do you want to use only for development
+or development + production.
+
+Unit testing libs : Junit.jar===>
+
+ --save = >    development + production
+ --save-dev => only for development
+
+$npm install /i --save lodash
+
+Dev Dependencies:
+
+$npm install --save-dev
+
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
+  }
+
+
+
+npm uninstalling:
+................
+>npm uninstall jquery --save
+
+
+
+
+........................****************....................................................
+
+-g : global dependencies:
+..........................
+global package : package will be installed globally 
+ inside c drive.
+ looks like exe/bat files in windows
+
+global packages not used for development(coding)
+
+
+tools
+ ->build system :webpack
+ ->servers - webservers,testing servers
+ ->compilers : babel,tsc....
+
+Demo: 
+
+1.tool called mocha  :  it is testing server
+
+$npm i mocha -g
+
+
+global dependencies not good for multiple sharing projects
+
+install tools as project specific. --save-dev
+
+
+
+javascript automation:
+	 single command trigger workflows
+
+section is used for  automation:
+
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+
+"scripts": {
+    "commandName": "task to be automated"
+}
+commandname can be provided by npm called built in commands
+
+
+eg:
+start
+test
+postinstall
+preinstall
+
+custom commands also possible.
+
+hello
+hai
+subu
+welcome
+build
+
+Note: any tool if you want to use, which was installed as dev- dependencies
+
+ you have to run via scripts only.
+
+How to enable automation?
+
+ >npm start
+ >npm test
+
+For running:
+>npm test | start  : in built commands
+>npm run subu | npm run customCommand.
+
+"scripts": {
+    "test": "mocha",
+    "subu": "node src/server.js",
+    "start": "node src/server.js",
+    "build": "webpack"
+  }
+
+ES 6 Modules:
+............
+
+ next module system after commonjs(exports,module.exports,require)
+
+ES 6 moudles are javascript committe modules
+
+export = exports =>code will be packed inside object
+export default = module.exports =  code will be returned as it is
+import == require()
+
+Note: Node does not support es 6 modules, only cjs
+
+//const {name} = require('./mylib')
+import { name, address, sayGreet } from './mylib';
+import Employee from "./Employee";
+
+console.log(name, address, sayGreet());
+new Employee();
+
+{
+  "name": "mynode-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node src/index.js",
+    "subu": "node src/index.js",
+    "build" : "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
+
+
+export default class Employee {
+    constructor() {
+        console.log('Employee')
+    }
+
+}
+
+
+//exports.name = 'subrmanaian'
+export const name = 'Subramanian'
+
+export const sayGreet = () => 'Hello';
+
+export const address = {
+    city: 'BNG'
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Real time web development:
+
+Types of web apps:
+
+1.static 
+2.Dynamic web application 
+   -Prepares html pages on fly, by connecting datasources
+  Httpserver + otherprogram(java,c,javascript)----datasource
+3.Web Service
+   Program which prepares document not html rather than data driven docs
+   -xml,json,.....
+ soap based /xml based webservice)
+ REST -RE -Format(xml,json,pdf,word,html....,S-STATE(DATA)--T-TRANSFERING(HTTP)
+
+3.SPA - CLIENT SIDE APPS-HTML,JS,CSS
+...........................................................................................
+
+What type of web app we can build on node?
+ All.
+
+if you want to build realtime web app
+
+ -boiler plate code.
+    
+drawbacks of existing http module.
+
+1.no separation
+2.no design pattern
+3.request/response handling not done through url and method based
+
+
+Web frameworks:
+
+1.Express js:
+
+Express is very small framework, not for enterprise.
+Express can be used only for small to medium scale apps.
+
+
+Express core features:
+
+1.ROUTE BASED Request and response handling.
+2.Plugins are offered via middlewares.
+
+
+
+Express is Node framework built on the top of node http module.
+
+
+You can create two types of application
+
+1.RESTFull web services
+2.Dynamic web application 
+
+
+HOW To implement REST Architecutre?
+
+Every pl today provides implementation for build rest full architecutres.
+
+Express and REST architecture:
+..............................
+
+Express core concepts:
+
+1.Express Application : collection of many objects
+2.Express Modules
+3.Express middlewares
+4.Express with third party libs.
+
+
+Use case : How to create simple REST API : get,post,delete,put...
+
+
+const express = require('express');
+
+const port = process.env.port || 3000;
+
+//console.log(express)
+
+//create Expression Application
+const app = express();
+
+//Create REST Endpoints
+
+//todos apis
+app.get('/api/todos', function (req, res) {
+    res.end('todos api -get')
+});
+app.post('/api/todos', function (req, res) {
+    res.end('todos api -post')
+});
+app.put('/api/todos', function (req, res) {
+    res.end('todos api -put')
+});
+app.delete('/api/todos', function (req, res) {
+    res.end('todos api -delete')
+});
+
+//users
+app.get('/api/users', function (req, res) {
+    res.end('users api -get')
+});
+app.post('/api/users', function (req, res) {
+    res.end('users api -post')
+});
+app.put('/api/users', function (req, res) {
+    res.end('users api -put')
+});
+app.delete('/api/users', function (req, res) {
+    res.end('users api -delete')
+});
+
+//start server
+app.listen(port, function () {
+    console.log('Express server is running!!')
+})
+
+
+Application object mehtod
+
+Application
+Properties
+
+app.locals
+app.mountpath
+
+Events
+ mount
+
+Methods
+app.all()
+app.delete()
+app.disable()
+app.disabled()
+app.enable()
+app.enabled()
+app.engine()
+app.get()
+app.get()
+app.listen()
+app.METHOD()
+app.param()
+app.path()
+app.post()
+app.put()
+app.render()
+app.route()
+app.set()
+app.use()
+
+
+Modularation:
+
+Express App architecture : Domain Driven Arch
+  
+ rootFolder
+    src
+     -todos
+        -todomodule.js
+            -rest endpoints
+     -users
+     -payments
+     -billing
+     -util
+     -mock-data
+     -assets
+     -configs
+    
+   index.js
+   or
+   main.js
+   app.js
+
+
+Modularity : Express apps provides logical modularity , separating application into logical modules based on "domain" domain driven design.
+
+Todo module
+User module
+Post module
+Customer module
+invoice module
+
+Express provides a spcial Object called "Router" Object which helps to separate code into modular way.
+
+
+
+dynamic urls
+http://localhost:3000/api/todos/3
+
+Parameters:
+
+1.path parameter
+   /:placeholder
+2.query parameter
+
+How to send data?
+
+
+
+Middlewares:
+
+what is middleware?
+
+ it is utility can be plugged in express application.
+
+Express provides only
+1.request and response processing.
+2.Routers :in to modules.
+
+
+application needs:
+
+1.loggers
+2.security
+3.database connectivity
+3.data formating
+4.view engine integration
+etc.....	
+
+Types of middlewares
+1.custom middlewares
+2.third party middlewares
+
+
+middleware workflows:
+
+client----request---node--server---express application---
+
+			   | ---m1
+			   | --m2
+	express application| ---m3   ----Request Processing(get,post...)
+			   |---m4
+			   | --mn
+ 
+
+How to attach middleware with application object?
+
+app.use(middleware) : middleware registeration at app level : global middlewares
+router.use(middleware) : middleware registeration at module level
+
+app.use(url,middleware)
+   :Apply middleware globally for that url only
+
+router.use(url,middleware)
+   :apply middleware for that router for that url only.
+
+
+Types of middlewares based on Use:
+.................................
+Application-level middleware
+  middleware attached at application : global middlewares
+Router-level middleware
+ middleware attached at router level(module) : module specific
+Error-handling middleware
+ for handling global errors
+Built-in middleware
+ provided by express itself
+Third-party middleware
+ provided by others.
+
+
+Use case how to read data using middleware : body-parser
+
+Built-in middleware
+ provided by express itself
+
+1.body-parser :
+  which parses client input data into javascript object
+
+How to attach body-parser middleware at application object level?
+
+
+
+
+
+const express = require('express');
+const todosrouter = require('./todos/todosapi')
+const bodyParser = require('body-parser')
+
+
+const port = process.env.port || 3000;
+
+//create Expression Application
+const app = express();
+
+//global middleware registeration
+
+
+//custom middleware.
+app.use(function (req, res, next) {
+    console.log(`Url ${req.url} - ${req.method}`)
+    next();
+});
+
+app.use('/api/ibm',function (req, res, next) {
+    console.log(`Welcome to ibm`)
+    next();
+});
+
+//Body-parser middleware registeration.
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
+
+//bind router with app object
+app.use('/api/todos/', todosrouter)
+
+
+//start server
+app.listen(port, function () {
+    console.log('Express server is running!!')
+})
+
+const express = require('express');
+const TODOS = require('../mock-data/todos')
+
+const todorouter = express.Router()
+
+//todomiddlewares
+
+todorouter.use(function (req, res, next) {
+    console.log(`All todos`)
+    next();
+});
+
+todorouter.use('/filter', function (req, res, next) {
+    //biz logic
+    console.log(`All todos -id`)
+    next();
+});
+
+
+//todos apis
+todorouter.get('/list', function (req, res) {
+    res.json(TODOS)
+});
+todorouter.get('/:id', function (req, res) {
+    //read Request parameter
+    const id = parseInt(req.params.id)
+    const filteredtodos = TODOS.filter(todo => {
+        return todo.id === id;
+    });
+    res.json(filteredtodos);
+});
+todorouter.post('/', function (req, res) {
+    // let todo = ''
+    // req.on('data', function (chunk) {
+    //     todo += chunk;
+    // });
+    // req.on('end', function (chunk) {
+    //     //biz logic
+    //     TODOS.push(JSON.parse(todo))
+    //     res.json(TODOS)
+    // });
+    const todo = req.body;
+    console.log(todo);
+    TODOS.push(todo)
+    res.json(TODOS);
+});
+todorouter.put('/', function (req, res) {
+    res.end('todos api -put')
+});
+todorouter.delete('/', function (req, res) {
+    res.end('todos api -delete')
+});
+
+module.exports = todorouter;
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+Application sepficic features:
+..............................
+
+Database integration
+Security
+loggger
+auditing
+monitoring
+
+Express ----mongo db
+
+Model: same same java object to map relational tables : entity.
+
+const mongoose = require('mongoose');
+
+const ProductSchema = new mongoose.Schema({
+    name: { type: String, default: '' },
+    price: { type: Number, default: 0.0 },
+    descrition: { type: String },
+    image: { type: String, default: '' }
+});
+
+const Product = mongoose.model('Product',ProductSchema,'Product');
+
+module.exports = Product;
+
+<div class="container">
+    <div class="page-header"> PM - app</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">All Products</div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                {{#each products}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>&#8377;{{price}}</td>
+                    <td>{{description}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+
+
+
 
 
 

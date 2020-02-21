@@ -1,0 +1,2 @@
+
+exports.message = 'Hello'

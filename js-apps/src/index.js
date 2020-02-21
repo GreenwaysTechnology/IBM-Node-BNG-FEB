@@ -1,48 +1,31 @@
 
-//function declaration
-function sayHello() {
-    console.log('Hello');
-}
-//function invocation
-sayHello()
 
-function add() {
-    let c = 10 + 10
-    console.log(c)
+async function fetch() {
+    try {
+        let name = await getName()
+        let likes = await getLike();
+        let fakeUser = await getUser();
+        console.log(`Name : ${name} ,FakeUser ${fakeUser.name} Likes ${likes}`)
+    } catch (err) {
+        console.log(err)
+    }
 }
-add();
-///////////////////////////////////////////////////////////////////////////////
 
-//params and args:
-
-//a,b args
-//default args
-function multiply(a = 1, b = 1) {
-    let c = a * b;
-    console.log(c)
+function getName() {
+    return Promise.resolve('Subramanian')
 }
-//10,10 is params
-multiply(10, 10);
-multiply(undefined, 90);
 
-//more params ,not known : ... rest operator
-function logger(...arg) {
-    console.log(arg)
+function getLike() {
+    return Promise.resolve(12)
 }
-logger('hello');
-logger('hello', 'hey');
-logger('hello', 'hai', 'welcome');
 
-function getStockValue() {
-    let value = 10;
-    //return 10;
-    return value;
+function getUser() {
+    let fakeUser = {
+        name: 'admin'
+    };
+    if (fakeUser) {
+        return Promise.resolve(fakeUser)
+    }
+    return Promise.reject({ error: 'error' })
 }
-console.log(getStockValue());
-
-function isValid() {
-    return;//undefind
-}
-let res = isValid() ? 'Valid' : 'NotValid'
-console.log(res);
-//login validation : admin and admin.
+fetch();
